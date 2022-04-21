@@ -1,0 +1,617 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/toDoLists.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css"/>
+  </head>
+  <body>
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="NewsPage.html">News</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">ToDo lists<span class="sr-only">(current)</span></a>
+                </li>
+              </ul>
+            </div>
+        </nav>
+      </header>
+      <content>
+        <div class="legend_container container">
+          <div class="card mt-3">
+            <div class="card-body px-2 pb-0">
+              <h5 class="card-title font-weight-bold mb-n1">Приоритеты элементов ToDo:</h5>
+              <div class="row justify-content-start mx-0 mt-4">
+                <h5><span class="badge badge-light border border-dark p-2 mr-1 ">ОБЫЧНЫЙ</span></h5>
+                <h5><span class="badge badge-warning border border-dark p-2 mr-1">ВАЖНЫЙ</span></h5>
+                <h5><span class="badge badge-danger border border-dark p-2 mr-1">КРИТИЧНЫЙ</span></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="creation_container container">
+          <div class="createToDoList_card card bg-light mt-3">
+            <div class="card-header" role="button" data-toggle="collapse" data-target="#toDoList_form" aria-expanded="false">
+              СОЗДАТЬ СПИСОК TODO
+            </div>
+
+            <div class="collapse" id="toDoList_form">
+              <form>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="listName">Название</label>
+                    <input type="text" class="requiredToFill name form-control" id="listName" autocomplete="off" required>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button class="btn btn-secondary" type="reset">Очистить</button>
+                  <button class="submitBtn btn btn-success" type="submit" id="submit_list_btn">Создать</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="createToDoElement_card card bg-light mt-3">
+            <div class="card-header" role="button" data-toggle="collapse" data-target="#toDoElement_form" aria-expanded="false">
+              СОЗДАТЬ ЭЛЕМЕНТ TODO
+            </div>
+
+            <div class="collapse" id="toDoElement_form">
+              <form>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="elementHeader">Заголовок</label>
+                    <input type="text" class="requiredToFill name form-control" id="elementHeader" autocomplete="off" required>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-12 col-md">
+                      <label for="listPriority">Список</label>
+                      <select class="form-control custom-select" id="listPriority">
+<!--                    <option>Список дел №1 - Бытовые / учебные</option>
+                        <option>Список дел №2 - Рабочие</option> -->
+                       </select>
+                    </div>
+                    <div class="form-group col-12 col-md">
+                      <label for="elementPriority">Приоритет</label>
+                      <select class="form-control custom-select" id="elementPriority">
+                        <option value="0">Обычный</option>
+                        <option value="1">Важный</option>
+                        <option value="2">Критичный</option>
+                       </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="elementDescription">Описание</label>
+                    <textarea class="requiredToFill description form-control" id="elementDescription" rows="3"></textarea>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <button type="reset" class="btn btn-secondary">Очистить</button>
+                  <button type="submit" class="submitBtn btn btn-success" id="submit_element_btn">Создать</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="lists_container container">
+          <div class="lists_card card my-3" id="all_lists">
+            <div class="card-header" id="all_lists_header">
+              <ul class="nav nav-tabs nav-justified card-header-tabs" id="myTab" role="tablist">
+              </ul>
+            </div>
+
+            <div class="tab-content" id="all_lists_tab-content">
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаблон навигации по спискам, информация - lists-name -->
+        <li class="nav-item d-none" id="lists-navigation-template" role="presentation">
+          <a class="nav-link text-dark lists-nav-name" data-toggle="tab" role="tab"></a> 
+        </li>
+
+        <!-- Шаблон содержимого отдельного списка -->
+        <div class="d-none card-body tab-pane fade lists-body-template" role="tabpanel"> <!-- id -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="card-title mb-0 lists-name"></h2> <!-- Название + ID -->
+            <button type="button" class="btn btn-danger px-1 list-delete-button" id="delete_list_btn">
+              <span class="mr-1" style="color: white;">
+                <i class="fas fa-trash-alt"></i>
+              </span>
+              Удалить список
+            </button>
+          </div>
+          
+          <ul class="list-group">
+          </ul>
+        </div>
+
+        <!-- Шаблон еще невыполненного элемента списка -->
+        <li class="list-group-item p-0 d-none lists-item-common-template">
+          <div class="row mx-0">
+            <span class="badge badge_priority rounded-0 item-priority"> </span> <!-- Вид badge (badge-warning, badge-light, badge-danger) -->
+            <div class="col pl-3 pr-2 py-2">
+              <div class="row justify-content-between align-items-center mx-0">
+                <div class="col-12 col-md-9">
+                  <div class="headerAndDate_row row mx-0 mb-2">
+                    <h5 class="text-uppercase mb-0 Head item-name"></h5>         <!-- name --> 
+                    <h5 class="item-data text-muted ml-3"></h5> <!-- createDataTime -->
+                  </div>
+                  <div class="decription_row row mx-0">
+                    <p class="item-description mb-0"></p> <!-- description -->
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 text-right px-0">
+                  <div class="btn-group" role="group" aria-label="elementsActions">
+                    <button type="button" class="check_btn btn btn-outline-success">
+                      <span>
+                        <i class="fas fa-check"></i>
+                      </span>
+                    </button>
+                    <button type="button" class="edit_btn btn btn-outline-warning" data-toggle="modal" data-target="#editModal">
+                      <span>
+                        <i class="fas fa-pen"></i>
+                      </span>
+                    </button>
+                    <button type="button" class="delete_btn btn btn-outline-danger">
+                      <span>
+                        <i class="fas fa-trash-alt"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Шаблон выполненного элемента списка -->
+        <li class="list-group-item list-group-item-success p-0 d-none lists-item-done-template">
+          <div class="row mx-0">
+            <span class="badge badge_priority rounded-0 item-priority"> </span> <!-- badge -->
+            <div class="col pl-3 pr-2 py-2">
+              <div class="row justify-content-between align-items-center mx-0">
+                <div class="col-12 col-md-9">
+                  <div class="headerAndDate_row row mx-0 mb-2">
+                    <h5 class="item-name text-uppercase mb-0"></h5>
+                    <h5 class="item-data text-muted ml-3"></h5>
+                  </div>
+                  <div class="decription_row row mx-0">
+                    <p class="item-description mb-0"></p>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 text-right px-0">
+                  <span class="text-success" style="font-size: 2.75rem;">
+                    <i class="fas fa-check"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Редактирование элемента ToDo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="row justify-content-between">
+                    <div class="form-group col-8">
+                      <label for="modalElHeader">Заголовок</label>
+                      <input type="text" class="form-control" id="modalElHeader" autocomplete="off">
+                    </div>
+                    <div class="form-group col-4">
+                      <label for="modalElPriority">Приоритет</label>
+                      <select class="form-control custom-select" id="modalElPriority">
+                        <option value="0">Обычный</option>
+                        <option value="1">Важный</option>
+                        <option value="2">Критичный</option>
+                       </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="modalElDescription">Описание</label>
+                    <textarea class="form-control" id="modalElDescription" rows="3"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-success" id="save_changes_btn">Сохранить изменения</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </content>
+      <footer>
+          <div class="footer_container container">
+              <div class="row justify-content-center">
+                <span class="my-3">Sticky footer example.</span>
+            </div>
+          </div>
+      </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/toDo_Lists.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+<!-- <div class="household_affairs_card card-body tab-pane fade show active " id="householdAffairs" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h2 class="card-title mb-0">Список дел №1 - Бытовые / учебные</h2>
+                  <button type="button" class="btn btn-danger px-1">
+                    <span class="mr-1" style="color: white;">
+                      <i class="fas fa-trash-alt"></i>
+                    </span>
+                    Удалить список
+                  </button>
+                </div>
+                
+                <ul class="list-group">
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-warning badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0 Head">Написать доклад
+                                <span class="text-muted ml-3">05.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Проработать как минимум 15 страниц</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Написать доклад" data-priority="Важный" data-description="Проработать как минимум 15 страниц" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item list-group-item-success p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-light badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Вернуть Сане долг
+                                <span class="text-muted ml-3">04.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Должен сотку, нужно вернуть</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <span class="text-success" style="font-size: 2.75rem;">
+                              <i class="fas fa-check"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-danger badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Почитать книгу Атлант расправил плечи
+                                <span class="text-muted ml-3">04.10.2021</span>
+                              </h5>
+                            </div>
+                            <p class="decription_row  mb-0 mx-0">Остановились на главе 5</p>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Почитать книгу Атлант расправил плечи" data-priority="Критичный" data-description="Остановились на главе 5" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-light badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Помыть посуду
+                                <span class="text-muted ml-3">04.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Можно просто загрузить посудомойку</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Помыть посуду" data-priority="Обычный" data-description="Можно просто загрузить посудомойку" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li> 
+                </ul>
+              </div>
+
+              <div class="work_affairs_card card-body tab-pane fade" id="workAffairs" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h2 class="card-title mb-0">Список дел №2 - Рабочие</h2>
+                  <button type="button" class="btn btn-danger px-1">
+                    <span class="mr-1" style="color: white;">
+                      <i class="fas fa-trash-alt"></i>
+                    </span>
+                    Удалить список
+                  </button>
+                </div>
+                
+                <ul class="list-group">
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-danger badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Таск #1337
+                                <span class="text-muted ml-3">05.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Пофиксить критичный баг</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Таск #1337" data-priority="Критичный" data-description="Пофиксить критичный баг" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item list-group-item-success p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-warning badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Поднять бэкап БД для проекта
+                                <span class="text-muted ml-3">04.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Напомнить ментору скинуть ссылку на дамп</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <span class="text-success" style="font-size: 2.75rem;">
+                              <i class="fas fa-check"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-light badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Таск #4311 - FrontEnd
+                                <span class="text-muted ml-3">03.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Реализовать страницу просмотра деталей заказа</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Таск #4311 - FrontEnd" data-priority="Обычный" data-description="Реализовать страницу просмотра деталей заказа" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-light badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Таск #4311 - BackEnd
+                                <span class="text-muted ml-3">03.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Спроектировать и реализовать сервисы с бизнес-логикой для работы с заказами</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Таск #4311 - BackEnd" data-priority="Обычный" data-description="Спроектировать и реализовать сервисы с бизнес-логикой для работы с заказами" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  
+                  <li class="list-group-item p-0">
+                    <div class="row mx-0">
+                      <span class="badge badge-light badge_priority rounded-0"> </span>
+                      <div class="col pl-3 pr-2 py-2">
+                        <div class="row justify-content-between align-items-center mx-0">
+                          <div class="col-12 col-md-9">
+                            <div class="headerAndDate_row row mx-0 mb-2">
+                              <h5 class="text-uppercase mb-0">Таск #4312 - FrontEnd
+                                <span class="text-muted ml-3">03.10.2021</span>
+                              </h5>
+                            </div>
+                            <div class="decription_row row mx-0">
+                              <p class="mb-0">Реализовать страницу просмотра заказа пользователями</p>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-3 text-right px-0">
+                            <div class="btn-group" role="group" aria-label="elementsActions">
+                              <button type="button" class="check_btn btn btn-outline-success">
+                                <span>
+                                  <i class="fas fa-check"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="edit_btn btn btn-outline-warning" data-header="Таск #4312 - FrontEnd" data-priority="Обычный" data-description="Реализовать страницу просмотра заказа пользователями" data-toggle="modal" data-target="#editModal">
+                                <span>
+                                  <i class="fas fa-pen"></i>
+                                </span>
+                              </button>
+                              <button type="button" class="delete_btn btn btn-outline-danger">
+                                <span>
+                                  <i class="fas fa-trash-alt"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li> 
+                </ul>
+              </div> -->
